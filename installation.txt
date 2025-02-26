@@ -1,0 +1,38 @@
+-- use all defaults
+npx create-next-app@latest
+
+-- install heroui (https://www.heroui.com/docs/frameworks/nextjs)
+npm i @heroui/react framer-motion
+
+-- tailwind.css and heroui configuration:
+   -- in tailwind.config.ts:
+import {heroui} from "@heroui/react";
+-- update 
+  content: [
+    -- add to existing stuff
+    "./node_modules/@heroui/theme/dist/**/*.{js,ts,jsx,tsx}",
+  ],
+
+-- in src/app add new file providers.tsx. nextUi components use state, which is shared thru context
+        "use client";
+
+        import { HeroUIProvider } from "@heroui/react";
+
+        interface ProvidersProps {
+        children: React.ReactNode;
+        }
+
+        export default function Providers({ children }: ProvidersProps) {
+        return <HeroUIProvider>{children}</HeroUIProvider>;
+        }
+
+-- install prisma
+npx install prisma
+npx prisma inint --datasource-provider mysql
+
+* create database, user with grants and security tables on the database site
+* configure .env DATABASE_URL
+  -- will create models for all tables in schema. To create it for specific tables only, create a user in the db with access only to tables we need
+* npx prisma pull
+  -- generate prisma client
+* npx prisma generate  
