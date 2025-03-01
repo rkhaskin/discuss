@@ -1,8 +1,22 @@
-import { pool } from "@/db/mariadb";
+import Link from "next/link";
+import paths from "@/paths";
+import { Chip } from "@heroui/react";
+import { getTopics } from "@/services/topics-service";
 
 export default async function TopicList() {
-  const query = "select name, description, created_on, updated_on from topic";
-  const topics = await pool.query<>(query);
+  const topics = await getTopics();
 
-  const renderedTopics = topics.return();
+  const renderedTopics = topics.map((topic) => {
+    return (
+      <div key={topic.id}>
+        <Link href={paths.topicShow(topic.name)}>
+          <Chip color="warning" variant="shadow">
+            {topic.name}
+          </Chip>
+        </Link>
+      </div>
+    );
+  });
+
+  return <div className="flex flex-row flex-wrap gap-2">{renderedTopics}</div>;
 }

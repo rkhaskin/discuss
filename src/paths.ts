@@ -4,7 +4,6 @@ const paths = {
   },
 
   topicShow(slug: string) {
-    console.log("bbbbbbb", slug);
     return `/topics/${slug}`;
   },
 

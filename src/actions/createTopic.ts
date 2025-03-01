@@ -2,10 +2,11 @@
 import { z } from "zod";
 import { auth } from "@/auth";
 
-import { pool, UpdateResult } from "@/db/mariadb";
+import { UpdateResult } from "@/db/mariadb";
 import { redirect } from "next/navigation";
 import paths from "@/paths";
 import { revalidatePath } from "next/cache";
+import { insertTopic } from "@/services/topics-service";
 
 const CreateTopicSchema = z.object({
   name: z
@@ -39,8 +40,6 @@ export async function createTopic(
     };
   }
 
-  await new Promise((resolve) => setTimeout(resolve, 3000));
-
   const result = CreateTopicSchema.safeParse({
     name: formData.get("name"),
     description: formData.get("description"),
@@ -53,12 +52,8 @@ export async function createTopic(
   }
 
   let res: UpdateResult;
-  const insert = "insert into topic (name, description) values(?, ?)";
   try {
-    res = await pool.query<UpdateResult>(insert, [
-      result.data.name,
-      result.data.description,
-    ]);
+    res = await insertTopic(result.data);
   } catch (error: unknown) {
     const err = error instanceof Error ? error.message : "Something went wrong";
     return {

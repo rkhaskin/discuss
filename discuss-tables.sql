@@ -29,47 +29,4 @@
     updated_on timestamp null DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT `comment_user_id_fk` FOREIGN KEY (user_id) REFERENCES users (id) ON UPDATE cascade ON DELETE cascade,
     CONSTRAINT `comment_post_id_fk` FOREIGN KEY (post_id) REFERENCES post (id) ON UPDATE cascade ON DELETE cascade
-  
-  )
-  
-
-model Topic {
-  id          String @id @default(cuid())
-  slug        String @unique
-  description String
-  posts       Post[]
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
-model Post {
-  id      String @id @default(cuid())
-  title   String
-  content String
-  userId  String
-  topicId String
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  user     User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  topic    Topic     @relation(fields: [topicId], references: [id])
-  comments Comment[]
-}
-
-model Comment {
-  id       String  @id @default(cuid())
-  content  String
-  postId   String
-  userId   String
-  parentId String?
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  parent   Comment?  @relation("Comments", fields: [parentId], references: [id], onDelete: Cascade)
-  post     Post      @relation(fields: [postId], references: [id], onDelete: Cascade)
-  user     User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  children Comment[] @relation("Comments")
-}
+  );
